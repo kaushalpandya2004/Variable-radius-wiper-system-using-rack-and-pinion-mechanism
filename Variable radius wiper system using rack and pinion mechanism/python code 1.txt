@@ -1,0 +1,92 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from matplotlib.patches import Rectangle
+
+# --- CONFIGURATION ---
+WIDTH = 10
+HEIGHT = 6
+FRAMES = 60         # Reduced slightly for faster rendering
+INTERVAL = 50       # Speed
+
+# --- MATH FUNCTIONS ---
+def get_standard_wiper_pos(theta):
+    r = HEIGHT
+    x = r * np.cos(theta)
+    y = r * np.sin(theta)
+    return x, y
+
+def get_rp_robot_pos(theta):
+    if np.cos(theta) != 0:
+        r_side = abs((WIDTH / 2) / np.cos(theta))
+    else:
+        r_side = 999
+    if np.sin(theta) > 0:
+        r_top = HEIGHT / np.sin(theta)
+    else:
+        r_top = 999
+    r = min(r_side, r_top)
+    x = r * np.cos(theta)
+    y = r * np.sin(theta)
+    return x, y
+
+# --- SETUP PLOT ---
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+fig.suptitle('Area Coverage Comparison', fontsize=16, fontweight='bold')
+
+for ax in [ax1, ax2]:
+    ax.set_xlim(-WIDTH/2 - 1, WIDTH/2 + 1)
+    ax.set_ylim(-1, HEIGHT + 1)
+    ax.set_aspect('equal')
+    rect = Rectangle((-WIDTH/2, 0), WIDTH, HEIGHT, linewidth=2, edgecolor='black', facecolor='gray', alpha=0.2, linestyle='--')
+    ax.add_patch(rect)
+    ax.scatter(0, 0, color='black', s=100, zorder=10)
+
+ax1.set_title("Standard Wiper (1-DOF)\nFixed Radius", color='blue')
+ax2.set_title("Your Project (2-DOF)\nVariable Radius", color='green')
+
+# --- ANIMATION ELEMENTS ---
+line1, = ax1.plot([], [], 'b-', linewidth=4)
+trace1, = ax1.plot([], [], 'b-', linewidth=1, alpha=0.5)
+fill1_x, fill1_y = [0], [0]
+
+line2, = ax2.plot([], [], 'g-', linewidth=4)
+trace2, = ax2.plot([], [], 'g-', linewidth=1, alpha=0.5)
+fill2_x, fill2_y = [0], [0]
+
+corner_text = ax1.text(-4, 5, "", color='red', fontweight='bold')
+
+angles = np.linspace(0, np.pi, FRAMES)
+
+def update(frame):
+    theta = angles[frame]
+
+    # Left Side
+    wx, wy = get_standard_wiper_pos(theta)
+    line1.set_data([0, wx], [0, wy])
+    fill1_x.append(wx)
+    fill1_y.append(wy)
+    trace1.set_data(fill1_x, fill1_y)
+
+    if theta > np.pi/4 and theta < 3*np.pi/4:
+        corner_text.set_text("MISSED!")
+    else:
+        corner_text.set_text("")
+
+    # Right Side
+    rx, ry = get_rp_robot_pos(theta)
+    line2.set_data([0, rx], [0, ry])
+    fill2_x.append(rx)
+    fill2_y.append(ry)
+    trace2.set_data(fill2_x, fill2_y)
+
+    return line1, trace1, line2, trace2, corner_text
+
+# Create the Animation Object
+ani = animation.FuncAnimation(fig, update, frames=FRAMES, interval=INTERVAL, blit=True)
+
+# --- SAVE COMMAND ---
+print("Generating animation... please wait.")
+# This line saves the file using Pillow (standard library usually)
+ani.save('comparison.gif', writer='pillow', fps=15)
+print("SUCCESS: Animation saved as 'comparison.gif'. Check your folder!")
