@@ -1,0 +1,1 @@
+The linear force the rack-and-pinion can exert is derived from the servo torque:
