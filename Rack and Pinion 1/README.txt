@@ -1,0 +1,4 @@
+Rack and Pinion (Retractable Antenna) by MissionTrooper_TK-76271 on Thingiverse: https://www.thingiverse.com/thing:4619438
+
+Summary:
+Videos:https://youtu.be/BhXsyKlJ74Uhttps://youtu.be/MdO_4W80xlgBOM:Standard Size Continuous Rotation Servo.  I modified an Airtronics servo to make it continuous, but anything like this will work. https://hitecrcd.com/products/servos/robotic-servos/hsr1425/product2 CLT1073/CYT1076 CYT1073/CLT1073 micro switches.https://www.amazon.com/Cylewet-25Pcs-Switch-Arduino-CYT1073/dp/B073TYWX86/https://www.amazon.ca/gp/product/B07DGX9B9C/1 8x3mm magnethttps://www.amazon.ca/gp/product/B0895MFWYX/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&amp;psc=1Code on GitHub: https://github.com/BipeFlyer/Antenna-on-Rack-and-Pinion
